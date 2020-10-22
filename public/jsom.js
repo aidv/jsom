@@ -2,8 +2,9 @@ class JSOM {
     constructor(opt){
         this.root = $('<div></div>').appendTo(opt.root)
 
-        this.otherTypes = ['events', 'id', 'class', 'text', ]
+        //this.otherTypes = ['events', 'id', 'class', 'text', ] //deprecated
 
+        this.isObject = value => value &&  (Object.prototype.toString.call(value) === "[object Object]" || "object" === typeof value || value instanceof Object)
         this.isFunction = value => value && (Object.prototype.toString.call(value) === "[object Function]" || "function" === typeof value || value instanceof Function)
     }
 
@@ -21,31 +22,40 @@ class JSOM {
                 }
             }
         }
-        function parseOther(element, key, value){
-            if (key == 'events') return parseEvents(element, value)
 
+        function parseAttribute(element, key, value){
             var isFunction = t.isFunction(element[key])
             if (isFunction) return element[key](value)
 
             element.attr(key, value)
         }
 
-        function parseNode(tree, root){
+        function parseObject(tree, root){
             for (var key in tree){
                 if (key == 'actions') continue
 
                 var value = tree[key]
 
-                if (t.otherTypes.includes(key)){
-                    parseOther(root, key, value)
+                var isObject = t.isObject(value)
+                if (!isObject){
+                    parseAttribute(root, key, value)
                     continue
                 }
 
-                var element = $(`<${key}></${key}>`).appendTo(root)
-                parseNode(value, element)
+                if (key == 'events'){
+                    parseEvents(root, value)
+                    continue
+                }
+
+                var split = key.split('_')
+
+                var type = split[0]
+
+                var element = $(`<${type}></${type}>`).appendTo(root)
+                parseObject(value, element)
             }
         }
 
-        parseNode(obj, this.root)
+        parseObject(obj, this.root)
     }
 }
