@@ -65,4 +65,5 @@ jsom.parse(testTree)
 Support JSOM by buying me a coffee, starring, contributing, etc...
 
 [Donate using card or PayPal @ BuyMeACoffe](https://www.buymeacoffee.com/splitter)
+
 [Donate on Patreon](https://www.patreon.com/splitter_ai)
