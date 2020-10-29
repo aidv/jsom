@@ -1,6 +1,5 @@
-class JSOM {
-    constructor(opt){
-        this.root = opt.root
+class JSOM_ {
+    constructor(){
         this.isObject = value => value &&  (Object.prototype.toString.call(value) === "[object Object]" || "object" === typeof value || value instanceof Object)
         this.isFunction = value => value && (Object.prototype.toString.call(value) === "[object Function]" || "function" === typeof value || value instanceof Function)
 
@@ -24,7 +23,7 @@ class JSOM {
         }
     }
 
-    parse(obj){
+    parse(obj, root){
         var t = this
         
         function parseEvents(element, events){
@@ -68,14 +67,21 @@ class JSOM {
 
                 var tag = split[0]
 
-                var element = document.createElement(tag)
-                root.appendChild(element)
-                
                 var id_add = (split[1] ? {id: split[1]} : undefined)
-                parseObject({...id_add, ...value}, element)
+
+                if (tag.length > 0){
+                    var element = document.createElement(tag)
+                    root.appendChild(element)
+                    parseObject({...id_add, ...value}, element)
+                    root[id_add.id] = element
+                } else {
+                    root[id_add.id] = value
+                }
             }
         }
 
-        parseObject(obj, this.root)
+        parseObject(obj, root)
     }
 }
+
+var JSOM = new JSOM_()

@@ -1,5 +1,55 @@
 # JSOM
-JSON based markup language
+
+## What is JSOM
+JSON based markup language.
+It was started as a hobby project.
+
+## What is JSOM NOT
+It's meant for quick prototyping.
+JSOM is not a replacement for React, Angular, Vue, or any other framework.
+
+## What is JSOM maybe
+Maybe it's easy to use. Maybe it's less cluttered that other frameworks. Maybe it's good.
+
+### New in 0.0.4
+- JSOM class is now globally accesed globally just like JSON. No need to declare, create and use.
+
+- Created elements are now stored in parent.
+Example: ```js
+    var tree = {
+        div_myDiv: { class: 'container', events: {click: function(){ alert('container clicked') }},
+            button_myButton: { text: 'Button',
+                events: {click: function(){ alert('button clicked') }},
+            },
+        }
+    }
+
+    //parse tree
+    JSOM.parse(tree, parentElement) //parentElement is a DOM element
+    
+    //myButton is now accessed
+    var theButton = parentElement.myDiv.myButton
+```
+
+- Non-tagged objects. Creating an object with no tag is handled as a key and is added to parent element. This is good when creating classes.
+
+This is done by excluding the tag but still including the underscore and the ID.
+
+Example: ```js
+    var tree = {
+        div_myDiv: { class: 'container', events: {click: function(){ alert('container clicked') }},
+            _myClass: new MyClass()
+        }
+    }
+
+    //parse tree
+    JSOM.parse(tree, parentElement) //parentElement is a DOM element
+    
+    //myClass is now accessed
+    var theClass = parentElement.myDiv.myClass
+```
+
+- JSOM warns if an ID has already been used
 
 ### New in 0.0.3
 
@@ -60,9 +110,7 @@ var testTree = {
     div_2: subTree
 }
 
-
-var jsom = new JSOM({root: $('body')})
-jsom.parse(testTree)
+JSOM.parse(testTree)
 ```
 
 
