@@ -1,6 +1,12 @@
 # JSOM
 JSON based markup language
 
+### New in 0.0.3
+
+- jQuery is no longer needed
+- The element unique ID defined in the JSON tree will automatically be used as the ID property for the element.
+Example: `div_1` -> `<div id="1"> ...`. No unique id will be ignored completely.
+
 ### Background
 
 After building various sites for myself and clients I noticed a pattern and a need to quickly be able to write code that works
@@ -22,7 +28,7 @@ This is because JS object keys have to be unique.
 During static markups this is not an issue, and is actually a good practice.
 
 JSOM accepts events definitions within a tree, and events can be specified as a lambda function or referenced from elsewhere.
-The `events` keys must be whatever `jQuery.on()` requires.
+The `events` keys must be whatever `~~jQuery.on()~~` `Event Listerner` requires, such as `click`, `mouseover`, etc.
 
 JSOM also accepts external trees within a tree, so you can reference however you want.
 

@@ -1,11 +1,27 @@
 class JSOM {
     constructor(opt){
-        this.root = $('<div></div>').appendTo(opt.root)
-
-        //this.otherTypes = ['events', 'id', 'class', 'text', ] //deprecated
-
+        this.root = opt.root
         this.isObject = value => value &&  (Object.prototype.toString.call(value) === "[object Object]" || "object" === typeof value || value instanceof Object)
         this.isFunction = value => value && (Object.prototype.toString.call(value) === "[object Function]" || "function" === typeof value || value instanceof Function)
+
+        this.properties = {
+            text: 'textContent',
+            html: 'innerHTML'
+        }
+        this.trySetProperty = (element, value) => {
+            //checks if value is a sfull length string or short string version of a predefined element property
+            //if it is, it sets the value to the element
+
+            var sanitized = this.properties[value]
+            if (!sanitized) sanitized = value
+            for (var key in this.properties)
+                if (this.properties[key] === sanitized){
+                    element[sanitized] = value
+                    return true
+                }
+
+            return
+        }
     }
 
     parse(obj){
@@ -15,19 +31,20 @@ class JSOM {
             for (var event in events){
                 var func = events[event]
                 if (t.isFunction(func)){
-                    element.unbind(event)
-                    element.on(event, func)
+                    element.addEventListener(event, func)
                 } else {
                     console.error(`${event} is not a function`)
                 }
             }
         }
 
-        function parseAttribute(element, key, value){
-            var isFunction = t.isFunction(element[key])
-            if (isFunction) return element[key](value)
 
-            element.attr(key, value)
+        function parseAttribute(element, key, value){
+            if (t.trySetProperty(element, key)) return
+
+            if (key === 'id' && document.getElementById(value)) console.warn(`Element with ID has ${value} already been created`)
+                
+            element.setAttribute(key, value)
         }
 
         function parseObject(tree, root){
@@ -49,10 +66,13 @@ class JSOM {
 
                 var split = key.split('_')
 
-                var type = split[0]
+                var tag = split[0]
 
-                var element = $(`<${type}></${type}>`).appendTo(root)
-                parseObject(value, element)
+                var element = document.createElement(tag)
+                root.appendChild(element)
+                
+                var id_add = (split[1] ? {id: split[1]} : undefined)
+                parseObject({...id_add, ...value}, element)
             }
         }
 
