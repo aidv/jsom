@@ -7,14 +7,14 @@ class JSOM_ {
             text: 'textContent',
             html: 'innerHTML'
         }
-        this.trySetProperty = (element, value) => {
+        this.trySetProperty = (element, key, value) => {
             //checks if value is a sfull length string or short string version of a predefined element property
             //if it is, it sets the value to the element
 
-            var sanitized = this.properties[value]
-            if (!sanitized) sanitized = value
-            for (var key in this.properties)
-                if (this.properties[key] === sanitized){
+            var sanitized = this.properties[key]
+            if (!sanitized) sanitized = key
+            for (var key_ in this.properties)
+                if (this.properties[key_] === sanitized){
                     element[sanitized] = value
                     return true
                 }
@@ -39,7 +39,7 @@ class JSOM_ {
 
 
         function parseAttribute(element, key, value){
-            if (t.trySetProperty(element, key)) return
+            if (t.trySetProperty(element, key, value)) return
 
             if (key === 'id' && document.getElementById(value)) console.warn(`Element with ID has ${value} already been created`)
                 
