@@ -11,6 +11,22 @@ JSOM is not a replacement for React, Angular, Vue, or any other framework.
 ## What is JSOM maybe
 Maybe it's easy to use. Maybe it's less cluttered that other frameworks. Maybe it's good.
 
+## New in 0.0.5a
+
+- Bugfix
+
+- Untagged objects with no leading underscore will be treated as a `div` tag by default
+
+Example: 
+```js
+    var tree = {
+        myDiv: { class: 'container', events: {click: function(){ alert('container clicked') }} }
+    }
+    
+    JSOM.parse(tree, parentElement) //parentElement is a DOM element
+    
+```
+
 ## New in 0.0.5
 
 - Untagged objects now support a callback function. The callback provides the parent element as a parameter
@@ -123,16 +139,15 @@ var subTree = {
 
 
 var testTree = {
-    div_1: {
+    myDiv: {
         id: 'test',
         class: 'container',
         events: {click: function(){ alert('container clicked') }},
-        div: {text: 'Item 1'},
-        div: {text: 'Item 2'} 
+        div1: {text: 'Item 1'},
+        div2: {text: 'Item 2'} 
     },
 
-    button_1: {
-        id: 'button',
+    myButon: {
         text: 'Button',
         events: {click: function(){ alert('button clicked') }},
     },
