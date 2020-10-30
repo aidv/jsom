@@ -11,6 +11,43 @@ JSOM is not a replacement for React, Angular, Vue, or any other framework.
 ## What is JSOM maybe
 Maybe it's easy to use. Maybe it's less cluttered that other frameworks. Maybe it's good.
 
+
+## New in 0.0.6
+
+- Tagged objects now supports ID's with underscores
+
+- Element Bucket. Every element created is stored in a bucket, where the name of the bucket item is named after the ID.
+
+This requires the ID is unique, no matter where in the tree the element is created.
+
+The bucket is returned from `JSOM.parse()`.
+
+Example: 
+```js
+    var tree = {
+        div_myDiv: { class: 'container', events: {click: function(){ alert('container clicked') }},
+            div_myDiv: {
+                div_subDiv: {
+                    div_deepDiv: {}
+                }
+            }
+            div_anotherDiv: {}
+        }
+    }
+
+    //The _untaggedClassThatWantsDOM value will be the created class itself... or anything that you intentionally return.
+
+    //parse tree
+    var bucket = JSOM.parse(tree, parentElement) //parentElement is a DOM element
+    
+    var myDiv       = bucket.myDiv
+    var subDiv      = bucket.subDiv
+    var anotherDiv  = bucket.anotherDiv
+    var deepDiv     = bucket.deepDiv
+    
+```
+
+
 ## New in 0.0.5
 
 - Untagged objects now support a callback function. The callback provides the parent element as a parameter

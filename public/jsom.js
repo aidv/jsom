@@ -26,6 +26,9 @@ class JSOM_ {
     parse(obj, root){
         var t = this
         
+        root.bucket = {}
+        var bucket = root.bucket
+
         function parseEvents(element, events){
             for (var event in events){
                 var func = events[event]
@@ -67,26 +70,41 @@ class JSOM_ {
 
                 var tag = split[0]
 
+                split.splice(0,1)
+                split[1] = split.join('_')
                 var id_add = (split[1] ? {id: split[1]} : undefined)
 
+
+                function addEntry(key, value){
+                    root[key] = value
+                    bucket[key] = value
+                }
+
+                if (id_add.id == ''){
+                    console.log()
+                }
                 if (tag.length > 0){
                     var element = document.createElement(tag)
                     root.appendChild(element)
                     parseObject({...id_add, ...value}, element)
-                    root[id_add.id] = element
+                    addEntry(id_add.id, element)
                 } else {
                     var cb = value
                     if (t.isFunction(cb)){
                         var return_ = cb(root)
-                        if (return_) root[id_add.id] = return_
+                        if (return_){
+                            addEntry(id_add.id, return_)
+                        }
                     } else {
-                        root[id_add.id] = value
+                        addEntry(id_add.id, value)
                     }
                 }
             }
         }
 
         parseObject(obj, root)
+
+        return bucket
     }
 }
 
