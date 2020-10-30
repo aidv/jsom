@@ -75,7 +75,13 @@ class JSOM_ {
                     parseObject({...id_add, ...value}, element)
                     root[id_add.id] = element
                 } else {
-                    root[id_add.id] = value
+                    var cb = value
+                    if (t.isFunction(cb)){
+                        var return_ = cb(root)
+                        if (return_) root[id_add.id] = return_
+                    } else {
+                        root[id_add.id] = value
+                    }
                 }
             }
         }

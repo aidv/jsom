@@ -11,6 +11,33 @@ JSOM is not a replacement for React, Angular, Vue, or any other framework.
 ## What is JSOM maybe
 Maybe it's easy to use. Maybe it's less cluttered that other frameworks. Maybe it's good.
 
+## New in 0.0.5
+
+- Untagged objects now support a callback function. The callback provides the parent element as a parameter
+and can return anything of your choice, usually the created class.
+
+This was implemented in order to support classes that accepts DOM's in the constructor.
+
+Example: 
+```js
+    var tree = {
+        div_myDiv: { class: 'container', events: {click: function(){ alert('container clicked') }},
+            _untaggedString: 'this can be a string',
+            _untaggedObject: {or_an_object: '...',
+            _untaggedClass: new MyClass(),
+            _untaggedClassThatWantsDOM: (parent) => { return new ClassThatWantsDOM({owner: parent}) }
+        }
+    }
+
+    //The _untaggedClassThatWantsDOM value will be the created class itself... or anything that you intentionally return.
+
+    //parse tree
+    JSOM.parse(tree, parentElement) //parentElement is a DOM element
+    
+    //myButton is now accessed
+    var theClassThatWantsDOM = parentElement.myDiv._untaggedClassThatWantsDOM
+```
+
 ### New in 0.0.4
 - JSOM class is now globally accesed globally just like JSON. No need to declare, create and use.
 
@@ -33,7 +60,7 @@ Example:
     var theButton = parentElement.myDiv.myButton
 ```
 
-- Non-tagged objects. Creating an object with no tag is handled as a key and is added to parent element. This is good when creating classes.
+- Untagged objects. Creating an object with no tag is handled as a key and is added to parent element. This is good when creating classes.
 
 This is done by excluding the tag but still including the underscore and the ID.
 
@@ -96,16 +123,15 @@ var subTree = {
 
 
 var testTree = {
-    div_1: {
+    myDiv: {
         id: 'test',
         class: 'container',
         events: {click: function(){ alert('container clicked') }},
-        div: {text: 'Item 1'},
-        div: {text: 'Item 2'} 
+        div1: {text: 'Item 1'},
+        div2: {text: 'Item 2'} 
     },
 
-    button_1: {
-        id: 'button',
+    myButon: {
         text: 'Button',
         events: {click: function(){ alert('button clicked') }},
     },
