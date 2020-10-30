@@ -15,7 +15,9 @@ Maybe it's easy to use. Maybe it's less cluttered that other frameworks. Maybe i
 - JSOM class is now globally accesed globally just like JSON. No need to declare, create and use.
 
 - Created elements are now stored in parent.
-Example: ```js
+
+Example:
+```js
     var tree = {
         div_myDiv: { class: 'container', events: {click: function(){ alert('container clicked') }},
             button_myButton: { text: 'Button',
@@ -35,7 +37,8 @@ Example: ```js
 
 This is done by excluding the tag but still including the underscore and the ID.
 
-Example: ```js
+Example:
+```js
     var tree = {
         div_myDiv: { class: 'container', events: {click: function(){ alert('container clicked') }},
             _myClass: new MyClass()
@@ -78,7 +81,7 @@ This is because JS object keys have to be unique.
 During static markups this is not an issue, and is actually a good practice.
 
 JSOM accepts events definitions within a tree, and events can be specified as a lambda function or referenced from elsewhere.
-The `events` keys must be whatever `~~jQuery.on()~~` `Event Listerner` requires, such as `click`, `mouseover`, etc.
+The `events` keys must be whatever ~~`jQuery.on()`~~ `Event Listerner` requires, such as `click`, `mouseover`, etc.
 
 JSOM also accepts external trees within a tree, so you can reference however you want.
 
