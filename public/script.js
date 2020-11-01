@@ -19,14 +19,18 @@ var subtwo = {
 
 
 var testTree = {
+    eventsBucket: {
+        'myButtonClick': function(){ alert('button clicked from events bucket') }
+    },
+    
     div_d1: { id: 'test', class: 'container', events: {click: function(){ alert('container clicked') }},
         div_d1: {text: 'Item 1'},
-        div_d1: {text: 'Item 2'} 
+        div_d2: {text: 'Item 2'} 
     },
 
     button_myButton: { id: 'button',
         text: 'Button',
-        events: {click: function(){ alert('button clicked') }, mouseover: ()=>{console.log('mouse over')}},
+        events: {myButtonClick: 'click', mouseover: ()=>{console.log('mouse over')}},
     },
 
     div_subtree: subTree,
@@ -37,4 +41,4 @@ var testTree = {
 
 
 
-JSOM.parse(testTree, document.body)
+JSOM.parse({tree: testTree, root: document.body})

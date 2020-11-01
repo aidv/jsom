@@ -11,6 +11,33 @@ JSOM is not a replacement for React, Angular, Vue, or any other framework.
 ## What is JSOM maybe
 Maybe it's easy to use. Maybe it's less cluttered that other frameworks. Maybe it's good.
 
+## New in 0.0.7
+
+- `JSOM.parse()` now takes an object as parameter.
+
+- Custom parsers can now be defined. Default is `object_v1`. This was introduced for future parser development and
+gives some flexibility and possibly backwards compatibility.
+
+- A bucket of events can be defined in top most tree. This was introduced in order to make an tree JSON compatible and thus
+can now be serialized.
+
+Example: 
+```js
+    var myTree = {
+        eventsBucket: {
+            'myButtonClick': function(){ alert('button clicked from events bucket') }
+        },
+
+        div_myButton: {
+            events: {myButtonClick: 'click'},
+        }
+    }
+
+    var bucket = JSOM.parse({tree: myTree, root: parentElement})
+
+    //with custom parser
+    var bucket = JSOM.parse({tree: myTree, root: parentElement, parser: myParser})
+```
 
 ## New in 0.0.6
 
@@ -160,6 +187,10 @@ var subTree = {
 
 
 var testTree = {
+    eventsBucket: {
+        onMyButtonClicked: function(){ alert('button clicked') }
+    },
+
     myDiv: {
         id: 'test',
         class: 'container',
@@ -170,13 +201,13 @@ var testTree = {
 
     myButon: {
         text: 'Button',
-        events: {click: function(){ alert('button clicked') }},
+        events: {onMyButtonClicked: 'click'},
     },
 
     div_2: subTree
 }
 
-JSOM.parse(testTree)
+var bucket = JSOM.parse({tree: testTree, root: parentElement})
 ```
 
 
