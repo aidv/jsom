@@ -57,12 +57,58 @@ class JSOM_ {
                         
                     element.setAttribute(key, value)
                 }
+
+                function parseStyling(element, value){
+                    if (!value) return element.classList.remove('jsomElement')
+                    var styles = value.split(' ')
+                    var combos = {
+                        tl: ['top' , 'left'  ], t: ['top'   , 'center'], tr: ['top'  , 'right' ],
+                         l: ['left', 'middle'], c: ['center', 'middle'],  r: ['right', 'middle'],
+                        bl: ['left', 'bottom'], b: ['bottom', 'center'], br: ['right', 'bottom'],
+
+                        f: ['fill'], w: ['wrap'],
+
+                        ttb: ['ttb'], btt: ['btt'],
+
+                        sb: ['sb'], sa: ['sa'], sa: ['se'],
+
+                        s: ['scrollable']
+                    }
+
+                    /*var removables = {
+                        ns: ['scrollable']
+                    }*/
+
+                    for (var s in styles){
+                        var style = styles[s]
+                        for (var c in combos[style]){
+                            var combo = combos[style][c]
+                            element.classList.add('jsomStyle_' + combo)
+                        }
+
+                        /*for (var r in removables[style]){
+                            var removable = removables[style][r]
+                            element.classList.remove('jsomStyle_' + removable)
+                        }*/
+                    }
+                        
+                }
         
                 function parseObject(tree, root){
+                    
+
                     for (var key in tree){
                         if (key == 'actions' || key == 'eventsBucket') continue
         
                         var value = tree[key]
+        
+                        if (key == 'styling'){
+                            parseStyling(root, value)
+                            root.stylingSet = true
+                            continue
+                        }
+
+                        
         
                         var isObject = t.isObject(value)
                         if (!isObject){
@@ -74,7 +120,8 @@ class JSOM_ {
                             parseEvents(root, value)
                             continue
                         }
-        
+
+                       
                         var split = key.split('_')
         
                         var tag = split[0]
@@ -94,7 +141,10 @@ class JSOM_ {
                         }
                         if (tag.length > 0){
                             var element = document.createElement(tag)
+                            element.classList.add('jsomElement')
+
                             root.appendChild(element)
+                            
                             parseObject({...id_add, ...value}, element)
                             addEntry(id_add.id, element)
                         } else {
