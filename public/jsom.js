@@ -53,7 +53,7 @@ class JSOM_ {
                 function parseAttribute(element, key, value){
                     if (t.trySetProperty(element, key, value)) return
         
-                    if (key === 'id' && document.getElementById(value)) console.warn(`Element with ID has ${value} already been created`)
+                    //if (key === 'id' && document.getElementById(value)) console.warning(`Element with ID has ${value} already been created`)
                         
                     element.setAttribute(key, value)
                 }
@@ -70,7 +70,7 @@ class JSOM_ {
 
                         ttb: ['ttb'], btt: ['btt'],
 
-                        sb: ['sb'], sa: ['sa'], sa: ['se'],
+                        sb: ['sb'], sa: ['sa'], se: ['se'],
 
                         s: ['scrollable']
                     }
@@ -141,11 +141,13 @@ class JSOM_ {
                         }
                         if (tag.length > 0){
                             var element = document.createElement(tag)
-                            element.classList.add('jsomElement')
-
+                            
                             root.appendChild(element)
                             
                             parseObject({...id_add, ...value}, element)
+                            
+                            element.classList.add('jsomElement')
+
                             addEntry(id_add.id, element)
                         } else {
                             var cb = value
